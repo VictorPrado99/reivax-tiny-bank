@@ -1,13 +1,12 @@
 package cloud.reivax.tiny_bank.exceptions;
 
-import org.springframework.stereotype.Component;
 import org.springframework.web.ErrorResponse;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.client.HttpStatusCodeException;
 
-@ControllerAdvice
-@Component
+
+@RestControllerAdvice
 public class TinyBankExceptionHandler {
 
     @ExceptionHandler(exception = {HttpStatusCodeException.class})

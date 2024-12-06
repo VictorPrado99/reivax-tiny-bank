@@ -2,6 +2,7 @@ plugins {
 	java
 	id("org.springframework.boot") version "3.4.0"
 	id("io.spring.dependency-management") version "1.1.6"
+	id("org.springdoc.openapi-gradle-plugin") version "1.9.0"
 }
 
 group = "cloud.reivax"
@@ -36,7 +37,10 @@ dependencies {
 //	testImplementation("org.springframework.security:spring-security-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
-//	implementation("org.springdoc:springdoc-openapi-starter-webmvc-api")
+//	Spring Docs Dependencies
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0")
+
+//	Mapping dependencies
 	implementation("org.mapstruct:mapstruct:1.6.3")
 	annotationProcessor("org.mapstruct:mapstruct-processor:1.6.3")
 }
