@@ -1,1 +1,1 @@
-rootProject.name = "tiny-bank"
+rootProject.name = "reivax-tiny-bank"
