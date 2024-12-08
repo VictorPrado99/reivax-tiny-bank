@@ -29,4 +29,14 @@ public class ExceptionThrower {
                 StandardCharsets.UTF_8);
     }
 
+    public void throw422(String msg) {
+        HttpStatus unprocessableEntity = HttpStatus.UNPROCESSABLE_ENTITY;
+        throw HttpClientErrorException.create(msg,
+                unprocessableEntity,
+                unprocessableEntity.getReasonPhrase(),
+                null,
+                null,
+                StandardCharsets.UTF_8);
+    }
+
 }

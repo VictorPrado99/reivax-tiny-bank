@@ -22,7 +22,6 @@ import java.util.UUID;
 public class AccountServiceImpl implements AccountService {
 
     private final AccountRepository accountRepository;
-
     @Override
     public List<AccountModel> getAccounts(String[] accountIdsArray) {
         if (accountIdsArray == null) {

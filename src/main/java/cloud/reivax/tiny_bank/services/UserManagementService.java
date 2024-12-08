@@ -12,4 +12,6 @@ public interface UserManagementService {
     UserDto createUser(UserModel user);
 
     void disableUser(UUID userId);
+
+    void enableUser(UUID userId);
 }

@@ -10,7 +10,7 @@ public record AccountEntity(
         UUID accountId,
         UUID userId,
         // I am assuming single currency.
-        Double balance,
+        double balance,
 
         List<TransactionEntity> transactionHistory
 ) {

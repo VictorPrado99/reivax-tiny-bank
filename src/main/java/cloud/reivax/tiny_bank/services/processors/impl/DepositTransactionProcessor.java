@@ -8,6 +8,7 @@ import cloud.reivax.tiny_bank.services.models.accounts.TransactionModel;
 import cloud.reivax.tiny_bank.services.processors.TransactionProcessor;
 import cloud.reivax.tiny_bank.utils.ExceptionThrower;
 import cloud.reivax.tiny_bank.utils.mappers.AccountMapper;
+import cloud.reivax.tiny_bank.utils.mappers.TransactionMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -38,6 +39,9 @@ public class DepositTransactionProcessor implements TransactionProcessor {
         }
 
         AccountModel recipientAccount = mapperInstance.entityToModel(account);
+        TransactionMapper transactionMapper = TransactionMapper.INSTANCE;
+        transaction = transactionMapper.entityToModel(
+                accountRepository.generateTransactionEntity(transactionMapper.modelToEntity(transaction)));
 
         recipientAccount.processTransaction(transaction, OperationType.ADD);
 

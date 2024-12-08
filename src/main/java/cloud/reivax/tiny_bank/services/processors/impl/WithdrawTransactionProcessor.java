@@ -8,6 +8,7 @@ import cloud.reivax.tiny_bank.services.models.accounts.TransactionModel;
 import cloud.reivax.tiny_bank.services.processors.TransactionProcessor;
 import cloud.reivax.tiny_bank.utils.ExceptionThrower;
 import cloud.reivax.tiny_bank.utils.mappers.AccountMapper;
+import cloud.reivax.tiny_bank.utils.mappers.TransactionMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -29,7 +30,7 @@ public class WithdrawTransactionProcessor implements TransactionProcessor {
             ExceptionThrower.throw406("Origin AccountId Not Valid");
         }
 
-        AccountMapper mapperInstance = AccountMapper.INSTANCE;
+        AccountMapper accountMapper = AccountMapper.INSTANCE;
 
         AccountEntity account = accountRepository.findAccount(originAccountId);
 
@@ -37,10 +38,17 @@ public class WithdrawTransactionProcessor implements TransactionProcessor {
             ExceptionThrower.throw404("Account to withdraw not found");
         }
 
-        AccountModel recipientAccount = mapperInstance.entityToModel(account);
+        AccountModel recipientAccount = accountMapper.entityToModel(account);
 
+        TransactionMapper transactionMapper = TransactionMapper.INSTANCE;
+        transaction = transactionMapper.entityToModel(
+                accountRepository.generateTransactionEntity(transactionMapper.modelToEntity(transaction)));
+
+        if (recipientAccount.getBalance() < transaction.amount()) {
+            ExceptionThrower.throw422("Not enough balance for this Withdraw");
+        }
         recipientAccount.processTransaction(transaction, OperationType.SUBTRACT);
 
-        accountRepository.save(mapperInstance.modelToEntity(recipientAccount));
+        accountRepository.save(accountMapper.modelToEntity(recipientAccount));
     }
 }

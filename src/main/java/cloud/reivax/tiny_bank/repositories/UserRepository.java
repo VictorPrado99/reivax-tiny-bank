@@ -14,4 +14,6 @@ public interface UserRepository {
     UserEntity save(UserEntity userEntity);
 
     void disableById(UUID userId);
+
+    void enableById(UUID userId);
 }

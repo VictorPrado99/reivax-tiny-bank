@@ -49,4 +49,14 @@ public class InMemoryUserRepositoryImpl implements UserRepository {
         UserEntity user = db.get(userId);
         user.setUserEnabled(false);
     }
+
+    @Override
+    public void enableById(UUID userId) {
+        if (!db.containsKey(userId)) {
+            ExceptionThrower.throw404("User doesn't exists");
+        }
+        //This is for internal use, it doesn't have API Access
+        UserEntity user = db.get(userId);
+        user.setUserEnabled(true);
+    }
 }

@@ -14,7 +14,7 @@ public interface AccountRepository {
 
     TransactionEntity findTransaction(UUID transactionId);
 
-    List<AccountEntity> findAllAccounts();
+    TransactionEntity generateTransactionEntity(TransactionEntity transactionEntity);
 
-    UUID getAllowedUuid();
+    List<AccountEntity> findAllAccounts();
 }

@@ -24,14 +24,16 @@ public class InMemoryAccountRepositoryImpl implements AccountRepository {
     public AccountEntity save(AccountEntity accountEntity) {
         UUID accountId = InMemoryDbUtility.getOrGenerateKey(accountEntity.accountId(), db.keySet());
         UUID userId = accountEntity.userId();
-        AccountEntity toSaveEntity = accountEntity.toBuilder()
+        AccountEntity savedEntity = accountEntity.toBuilder()
                 .accountId(accountId)
                 .build();
 
         UserEntity userEntity = db.get(userId);
-        userEntity.addAccount(toSaveEntity);
 
-        return toSaveEntity;
+        Map<UUID, AccountEntity> accounts = userEntity.getAccounts();
+        accounts.put(accountId, savedEntity);
+
+        return savedEntity;
     }
 
     @Override
@@ -40,7 +42,7 @@ public class InMemoryAccountRepositoryImpl implements AccountRepository {
         //I made it return null to be filtered at service layer. This is just to showcase,
         //in a real app wouldn't be good creating two behaviors to similar methods
         return db.values().stream()
-                .flatMap(userEntity -> userEntity.getAccounts().stream())
+                .flatMap(userEntity -> userEntity.getAccounts().values().stream())
                 .filter(accountEntity -> accountEntity.accountId().equals(accountId))
                 .findFirst()
                 .orElse(null);
@@ -49,7 +51,7 @@ public class InMemoryAccountRepositoryImpl implements AccountRepository {
     @Override
     public TransactionEntity findTransaction(UUID transactionId) {
         return db.values().stream()
-                .flatMap(userEntity -> userEntity.getAccounts().stream())
+                .flatMap(userEntity -> userEntity.getAccounts().values().stream())
                 .flatMap(accountEntity -> accountEntity.transactionHistory().stream())
                 .filter(transactionEntities -> transactionEntities.transactionId().equals(transactionId))
                 .findFirst()
@@ -58,16 +60,21 @@ public class InMemoryAccountRepositoryImpl implements AccountRepository {
 
     @Override
     public List<AccountEntity> findAllAccounts() {
-        return db.values().stream().flatMap(userEntity -> userEntity.getAccounts().stream()).toList();
+        return db.values().stream().flatMap(userEntity -> userEntity.getAccounts().values().stream()).toList();
     }
 
     @Override
-    public UUID getAllowedUuid() {
-        Set<UUID> accountKeySet = db.values().stream()
-                .flatMap(userEntity -> userEntity.getAccounts().stream())
-                .map(AccountEntity::accountId)
+    public TransactionEntity generateTransactionEntity(TransactionEntity transactionEntity) {
+        Set<UUID> transactionIds = db.values().stream()
+                .flatMap(userEntity -> userEntity.getAccounts().values().stream())
+                .flatMap(accountEntity -> accountEntity.transactionHistory().stream())
+                .map(TransactionEntity::transactionId)
                 .collect(Collectors.toSet());
 
-        return InMemoryDbUtility.getOrGenerateKey(null, accountKeySet);
+        UUID transactionId = InMemoryDbUtility.getOrGenerateKey(transactionEntity.transactionId(), transactionIds);
+
+        return transactionEntity.toBuilder()
+                .transactionId(transactionId)
+                .build();
     }
 }

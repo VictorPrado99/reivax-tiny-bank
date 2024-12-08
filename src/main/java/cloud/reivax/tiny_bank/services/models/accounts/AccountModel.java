@@ -12,15 +12,13 @@ import java.util.UUID;
 public class AccountModel {
     private final UUID accountId;
     private final UUID userId;
-    @Setter(AccessLevel.NONE)
-    private Double balance;
+    private double balance;
 
     @Setter(AccessLevel.NONE)
     private final List<TransactionModel> transactionHistory = new LinkedList<>();
 
     public void processTransaction(TransactionModel transaction, OperationType operationType) {
-        if (balance == null) balance = 0D;
-        operationType.operationFunction.apply(balance, transaction.amount());
+        balance = operationType.operationFunction.apply(balance, transaction.amount());
         addTransactionToHistory(transaction);
     }
 
