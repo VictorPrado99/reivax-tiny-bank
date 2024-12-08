@@ -31,7 +31,7 @@ public interface AccountsController {
 
     @Operation(summary = "Get account balance")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Balance retrieve"),
+            @ApiResponse(responseCode = "200", description = "Retrieve balance"),
             @ApiResponse(responseCode = "404", description = "Account not found"),
             @ApiResponse(responseCode = "406", description = "AccountId is not an UUID")
     })
