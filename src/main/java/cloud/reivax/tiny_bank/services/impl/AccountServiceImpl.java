@@ -6,6 +6,7 @@ import cloud.reivax.tiny_bank.services.AccountService;
 import cloud.reivax.tiny_bank.services.models.accounts.AccountModel;
 import cloud.reivax.tiny_bank.services.models.accounts.TransactionModel;
 import cloud.reivax.tiny_bank.services.processors.TransactionProcessor;
+import cloud.reivax.tiny_bank.utils.ExceptionThrower;
 import cloud.reivax.tiny_bank.utils.mappers.AccountMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -64,5 +65,15 @@ public class AccountServiceImpl implements AccountService {
         AccountEntity newAccount = accountRepository.save(accountEntity);
 
         return AccountMapper.INSTANCE.entityToModel(newAccount);
+    }
+
+    @Override
+    public AccountModel retrieveAccount(UUID accountId) {
+        AccountEntity accountEntity = accountRepository.findAccount(accountId);
+        if (accountEntity == null) {
+            ExceptionThrower.throw404("Account not found");
+        }
+
+        return AccountMapper.INSTANCE.entityToModel(accountEntity);
     }
 }

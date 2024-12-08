@@ -14,4 +14,6 @@ public interface AccountService {
 
     AccountModel createAccount(UUID userId);
 
+    AccountModel retrieveAccount(UUID accountId);
+
 }
