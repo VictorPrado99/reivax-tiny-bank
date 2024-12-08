@@ -1,6 +1,7 @@
 package cloud.reivax.tiny_bank.utils.mappers;
 
 import cloud.reivax.tiny_bank.api.dtos.accounts.CreateTransactionDto;
+import cloud.reivax.tiny_bank.api.dtos.accounts.TransactionDto;
 import cloud.reivax.tiny_bank.repositories.entities.TransactionEntity;
 import cloud.reivax.tiny_bank.services.models.accounts.TransactionModel;
 import org.mapstruct.Mapper;
@@ -18,6 +19,8 @@ public interface TransactionMapper {
     TransactionModel entityToModel(TransactionEntity transactionEntity);
 
     TransactionEntity modelToEntity(TransactionModel transactionModel);
+
+    TransactionDto modelToDto(TransactionModel transactionModel);
 
 
 }

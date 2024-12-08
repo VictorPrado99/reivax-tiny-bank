@@ -3,6 +3,7 @@ package cloud.reivax.tiny_bank.api.controllers.impl;
 import cloud.reivax.tiny_bank.api.controllers.AccountsController;
 import cloud.reivax.tiny_bank.api.dtos.accounts.AccountDto;
 import cloud.reivax.tiny_bank.api.dtos.accounts.CreateTransactionDto;
+import cloud.reivax.tiny_bank.api.dtos.accounts.TransactionDto;
 import cloud.reivax.tiny_bank.services.AccountService;
 import cloud.reivax.tiny_bank.services.models.accounts.AccountModel;
 import cloud.reivax.tiny_bank.services.models.accounts.TransactionModel;
@@ -55,5 +56,21 @@ public class AccountsControllerImpl implements AccountsController {
         AccountDto accountDto = AccountMapper.INSTANCE.modelToDto(accountService.retrieveAccount(parsedAccountId));
 
         return ResponseEntity.ok(accountDto);
+    }
+
+    @Override
+    public ResponseEntity<List<TransactionDto>> retrieveAccountTransactionHistory(String accountId) {
+        UUID parsedAccountId = UuidUtility.parseUUIDString(accountId);
+        if (parsedAccountId == null) {
+            ExceptionThrower.throwUuidNotComplain();
+        }
+
+        List<TransactionModel> transactionModels = accountService.retrieveTransactionHistory(parsedAccountId);
+
+        List<TransactionDto> transactionDtos = transactionModels.stream()
+                .map(TransactionMapper.INSTANCE::modelToDto)
+                .toList();
+
+        return ResponseEntity.ok(transactionDtos);
     }
 }

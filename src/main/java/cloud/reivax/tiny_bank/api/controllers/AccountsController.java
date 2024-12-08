@@ -2,6 +2,7 @@ package cloud.reivax.tiny_bank.api.controllers;
 
 import cloud.reivax.tiny_bank.api.dtos.accounts.AccountDto;
 import cloud.reivax.tiny_bank.api.dtos.accounts.CreateTransactionDto;
+import cloud.reivax.tiny_bank.api.dtos.accounts.TransactionDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -37,4 +38,13 @@ public interface AccountsController {
     })
     @GetMapping("/balances/{accountId}")
     ResponseEntity<AccountDto> retrieveAccountBalance(@PathVariable String accountId);
+
+    @Operation(summary = "Get account transaction history")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Retrieve transaction history"),
+            @ApiResponse(responseCode = "404", description = "Account not found"),
+            @ApiResponse(responseCode = "406", description = "AccountId is not an UUID")
+    })
+    @GetMapping("/transactions/{accountId}")
+    ResponseEntity<List<TransactionDto>> retrieveAccountTransactionHistory(@PathVariable String accountId);
 }
