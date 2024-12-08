@@ -1,6 +1,7 @@
 package cloud.reivax.tiny_bank.services.processors.impl;
 
 import cloud.reivax.tiny_bank.repositories.AccountRepository;
+import cloud.reivax.tiny_bank.repositories.entities.AccountEntity;
 import cloud.reivax.tiny_bank.services.models.accounts.AccountModel;
 import cloud.reivax.tiny_bank.services.models.accounts.OperationType;
 import cloud.reivax.tiny_bank.services.models.accounts.TransactionModel;
@@ -20,17 +21,23 @@ public class DepositTransactionProcessor implements TransactionProcessor {
 
     @Override
     public void process(TransactionModel transaction) {
-        String supposedAccountId = transaction.recipient();
+        String supposedRecipientAccountId = transaction.recipient();
         UUID recipientAccountId = null;
         try {
-            recipientAccountId = UUID.fromString(supposedAccountId);
+            recipientAccountId = UUID.fromString(supposedRecipientAccountId);
         } catch (Exception e) {
             ExceptionThrower.throw406("Recipient AccountId Not Valid");
         }
 
         AccountMapper mapperInstance = AccountMapper.INSTANCE;
 
-        AccountModel recipientAccount = mapperInstance.entityToModel(accountRepository.findAccount(recipientAccountId));
+        AccountEntity account = accountRepository.findAccount(recipientAccountId);
+
+        if (account == null) {
+            ExceptionThrower.throw404("Recipient account not found");
+        }
+
+        AccountModel recipientAccount = mapperInstance.entityToModel(account);
 
         recipientAccount.processTransaction(transaction, OperationType.ADD);
 

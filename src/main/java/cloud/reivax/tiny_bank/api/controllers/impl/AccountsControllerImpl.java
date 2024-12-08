@@ -1,4 +1,4 @@
-package cloud.reivax.tiny_bank.api.controllers.accounts;
+package cloud.reivax.tiny_bank.api.controllers.impl;
 
 import cloud.reivax.tiny_bank.api.controllers.AccountsController;
 import cloud.reivax.tiny_bank.api.dtos.accounts.AccountDto;

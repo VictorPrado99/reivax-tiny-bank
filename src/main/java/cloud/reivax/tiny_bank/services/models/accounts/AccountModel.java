@@ -1,6 +1,5 @@
 package cloud.reivax.tiny_bank.services.models.accounts;
 
-import cloud.reivax.tiny_bank.services.models.users.UserModel;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
@@ -12,7 +11,7 @@ import java.util.UUID;
 @Data
 public class AccountModel {
     private final UUID accountId;
-    private final UserModel user;
+    private final UUID userId;
     @Setter(AccessLevel.NONE)
     private Double balance;
 

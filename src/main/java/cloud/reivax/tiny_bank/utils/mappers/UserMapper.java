@@ -15,11 +15,14 @@ public interface UserMapper {
     UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
     @Mapping(target = "userId", ignore = true)
+    @Mapping(target = "isUserEnabled", ignore = true)
+    @Mapping(target = "accounts", ignore = true)
     UserModel createUserDtoToModel(CreateUserDto createUserDto);
 
     UserDto userModelToUserDto(UserModel userModel);
 
     UserEntity userModelToEntity(UserModel userModel);
 
+    @Mapping(target = "isUserEnabled", ignore = true)
     UserModel userEntityToModel(UserEntity userEntity);
 }

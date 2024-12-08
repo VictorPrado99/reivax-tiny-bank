@@ -15,4 +15,6 @@ public interface AccountRepository {
     TransactionEntity findTransaction(UUID transactionId);
 
     List<AccountEntity> findAllAccounts();
+
+    UUID getAllowedUuid();
 }

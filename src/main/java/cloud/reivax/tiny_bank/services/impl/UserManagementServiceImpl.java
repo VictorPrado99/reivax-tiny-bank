@@ -1,6 +1,6 @@
 package cloud.reivax.tiny_bank.services.impl;
 
-import cloud.reivax.tiny_bank.api.dtos.accounts.AccountDto;
+import cloud.reivax.tiny_bank.api.dtos.users.UserDto;
 import cloud.reivax.tiny_bank.repositories.UserRepository;
 import cloud.reivax.tiny_bank.repositories.entities.UserEntity;
 import cloud.reivax.tiny_bank.services.AccountService;
@@ -10,11 +10,8 @@ import cloud.reivax.tiny_bank.services.models.users.UserModel;
 import cloud.reivax.tiny_bank.utils.mappers.AccountMapper;
 import cloud.reivax.tiny_bank.utils.mappers.UserMapper;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpServerErrorException;
 
-import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 @Service
@@ -30,26 +27,17 @@ public class UserManagementServiceImpl implements UserManagementService {
     }
 
     @Override
-    public AccountDto createUser(UserModel user) {
+    public UserDto createUser(UserModel user) {
         UserMapper userMapper = UserMapper.INSTANCE;
         UserEntity userEntity = userRepository.save(userMapper.userModelToEntity(user));
+        AccountModel accountModel = accountService.createAccount(userEntity.getUserId());
+        userEntity.addAccount(AccountMapper.INSTANCE.modelToEntity(accountModel));
 
-        AccountModel accountModel = accountService.createAccount(userMapper.userEntityToModel(userEntity));
-
-        return AccountMapper.INSTANCE.modelToDto(accountModel);
+        return userMapper.userModelToUserDto(userMapper.userEntityToModel(userEntity));
     }
 
     @Override
     public void disableUser(UUID userId) {
-        if (!userRepository.disableById(userId)) {
-            HttpStatus internalServerError = HttpStatus.INTERNAL_SERVER_ERROR;
-            throw HttpServerErrorException.ServiceUnavailable
-                    .create("Error on disabling user",
-                            internalServerError,
-                            internalServerError.getReasonPhrase(),
-                            null,
-                            null,
-                            StandardCharsets.UTF_8);
-        }
+        userRepository.disableById(userId);
     }
 }

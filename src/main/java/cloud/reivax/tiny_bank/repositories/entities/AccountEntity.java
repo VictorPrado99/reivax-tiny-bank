@@ -8,7 +8,7 @@ import java.util.UUID;
 @Builder(toBuilder = true)
 public record AccountEntity(
         UUID accountId,
-        UserEntity user,
+        UUID userId,
         // I am assuming single currency.
         Double balance,
 

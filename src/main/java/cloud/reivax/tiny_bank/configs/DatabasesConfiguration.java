@@ -1,6 +1,5 @@
 package cloud.reivax.tiny_bank.configs;
 
-import cloud.reivax.tiny_bank.repositories.entities.AccountEntity;
 import cloud.reivax.tiny_bank.repositories.entities.UserEntity;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,13 +16,4 @@ public class DatabasesConfiguration {
         return new ConcurrentHashMap<>();
     }
 
-    @Bean
-    public Map<UUID, UserEntity> disabledUserDb() {
-        return new ConcurrentHashMap<>();
-    }
-
-    @Bean
-    public Map<UUID, AccountEntity> accountDb() {
-        return new ConcurrentHashMap<>();
-    }
 }

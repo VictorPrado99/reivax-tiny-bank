@@ -1,6 +1,5 @@
 package cloud.reivax.tiny_bank.api.controllers;
 
-import cloud.reivax.tiny_bank.api.dtos.accounts.AccountDto;
 import cloud.reivax.tiny_bank.api.dtos.users.CreateUserDto;
 import cloud.reivax.tiny_bank.api.dtos.users.UserDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,7 +27,7 @@ public interface UsersController {
             @ApiResponse(responseCode = "406", description = "Invalid input provided")
     })
     @PostMapping(consumes = "application/json", produces = "application/json")
-    ResponseEntity<AccountDto> createUser(@RequestBody CreateUserDto createUserDto);
+    ResponseEntity<UserDto> createUser(@RequestBody CreateUserDto createUserDto);
 
     @Operation(summary = "Disable an user")
     @ApiResponses(value = {

@@ -1,21 +1,18 @@
-package cloud.reivax.tiny_bank.api.controllers.users;
+package cloud.reivax.tiny_bank.api.controllers.impl;
 
 import cloud.reivax.tiny_bank.api.controllers.UsersController;
-import cloud.reivax.tiny_bank.api.dtos.accounts.AccountDto;
 import cloud.reivax.tiny_bank.api.dtos.users.CreateUserDto;
 import cloud.reivax.tiny_bank.api.dtos.users.UserDto;
 import cloud.reivax.tiny_bank.services.UserManagementService;
 import cloud.reivax.tiny_bank.services.models.users.UserModel;
+import cloud.reivax.tiny_bank.utils.ExceptionThrower;
 import cloud.reivax.tiny_bank.utils.mappers.UserMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.HttpClientErrorException;
 
 import java.net.URI;
-import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 @Slf4j
@@ -35,12 +32,12 @@ public class UsersControllerImpl implements UsersController {
     }
 
     @Override
-    public ResponseEntity<AccountDto> createUser(CreateUserDto createUserDto) {
+    public ResponseEntity<UserDto> createUser(CreateUserDto createUserDto) {
         UserModel userModel = UserMapper.INSTANCE.createUserDtoToModel(createUserDto);
-        AccountDto accountDto = userManagementService.createUser(userModel);
+        UserDto userDto = userManagementService.createUser(userModel);
 
-        return ResponseEntity.created(URI.create(BASE_RESOURCE_PATH + accountDto.user().userId()))
-                .body(accountDto);
+        return ResponseEntity.created(URI.create(BASE_RESOURCE_PATH + userDto.userId()))
+                .body(userDto);
 
     }
 
@@ -56,12 +53,8 @@ public class UsersControllerImpl implements UsersController {
         try {
             return UUID.fromString(userIdString);
         } catch (IllegalArgumentException illegalArgumentException) {
-            throw HttpClientErrorException.NotAcceptable.create(
-                    HttpStatus.NOT_ACCEPTABLE,
-                    HttpStatus.NOT_ACCEPTABLE.getReasonPhrase(),
-                    null,
-                    null,
-                    StandardCharsets.UTF_8);
+            ExceptionThrower.throw406("Not acceptable UUID");
         }
+        return null;
     }
 }

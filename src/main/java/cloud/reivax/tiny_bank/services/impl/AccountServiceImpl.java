@@ -5,10 +5,8 @@ import cloud.reivax.tiny_bank.repositories.entities.AccountEntity;
 import cloud.reivax.tiny_bank.services.AccountService;
 import cloud.reivax.tiny_bank.services.models.accounts.AccountModel;
 import cloud.reivax.tiny_bank.services.models.accounts.TransactionModel;
-import cloud.reivax.tiny_bank.services.models.users.UserModel;
 import cloud.reivax.tiny_bank.services.processors.TransactionProcessor;
 import cloud.reivax.tiny_bank.utils.mappers.AccountMapper;
-import cloud.reivax.tiny_bank.utils.mappers.UserMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -61,9 +59,9 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public AccountModel createAccount(UserModel user) {
+    public AccountModel createAccount(UUID userId) {
         AccountEntity accountEntity = AccountEntity.builder()
-                .user(UserMapper.INSTANCE.userModelToEntity(user))
+                .userId(userId)
                 .build();
 
         AccountEntity newAccount = accountRepository.save(accountEntity);
