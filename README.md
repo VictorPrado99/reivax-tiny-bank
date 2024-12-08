@@ -17,8 +17,15 @@ Docker required.
 To run the project:
 
 1. Ensure that Gradle dependencies are installed. If you're using an IDE configured for Java or Kotlin, this should
-   happen automatically.
+   happen automatically, which I recommend that you do.
 2. If Gradle dependencies aren't installed automatically, you can manually run:
 
    ```bash
-   ./gradlew build
+      ./gradlew build
+    ```
+
+   Followed by
+    ```bash
+      ./gradlew bootRun
+    ```
+   To run the Spring App
