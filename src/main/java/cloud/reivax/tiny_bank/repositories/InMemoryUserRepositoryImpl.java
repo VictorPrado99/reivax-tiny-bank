@@ -1,6 +1,7 @@
 package cloud.reivax.tiny_bank.repositories;
 
 import cloud.reivax.tiny_bank.repositories.entities.UserEntity;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.HttpClientErrorException;
@@ -8,13 +9,13 @@ import org.springframework.web.client.HttpClientErrorException;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Repository
+@AllArgsConstructor
 public class InMemoryUserRepositoryImpl implements UserRepository {
 
-    private final Map<UUID, UserEntity> db = new ConcurrentHashMap<>();
-    private final Map<UUID, UserEntity> disabledDb = new ConcurrentHashMap<>();
+    private final Map<UUID, UserEntity> db;
+    private final Map<UUID, UserEntity> disabledDb;
 
     @Override
     public UserEntity findById(UUID userId) {
@@ -35,6 +36,8 @@ public class InMemoryUserRepositoryImpl implements UserRepository {
 
     @Override
     public UUID save(UserEntity userEntity) {
+        // I am not worrying about updating user, but theoretically this same method could be used for it,
+        // but, we may want further logic to keep historical data or something like that.
         UUID userId = getOrGenerateUserId(userEntity);
         db.put(userId, userEntity.toBuilder()
                 .userId(userId)
