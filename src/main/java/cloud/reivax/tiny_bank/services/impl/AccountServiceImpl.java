@@ -11,10 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 @AllArgsConstructor
 @Service
@@ -61,6 +58,7 @@ public class AccountServiceImpl implements AccountService {
     public AccountModel createAccount(UUID userId) {
         AccountEntity accountEntity = AccountEntity.builder()
                 .userId(userId)
+                .transactionHistory(new LinkedList<>())
                 .build();
 
         AccountEntity newAccount = accountRepository.save(accountEntity);

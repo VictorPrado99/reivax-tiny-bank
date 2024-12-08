@@ -1,6 +1,7 @@
 package cloud.reivax.tiny_bank.services.processors;
 
 import cloud.reivax.tiny_bank.services.processors.impl.DepositTransactionProcessor;
+import cloud.reivax.tiny_bank.services.processors.impl.TransferTransactionProcessor;
 import cloud.reivax.tiny_bank.services.processors.impl.UnkownTransactionProcessor;
 import cloud.reivax.tiny_bank.services.processors.impl.WithdrawTransactionProcessor;
 import cloud.reivax.tiny_bank.utils.ApplicationContextProvider;
@@ -15,6 +16,7 @@ public enum TransactionType {
     UNKNOWN(UnkownTransactionProcessor.class),
     DEPOSIT(DepositTransactionProcessor.class),
     WITHDRAW(WithdrawTransactionProcessor.class),
+    TRANSFER(TransferTransactionProcessor.class)
     ;
 
     private final Class<? extends TransactionProcessor> clazz;

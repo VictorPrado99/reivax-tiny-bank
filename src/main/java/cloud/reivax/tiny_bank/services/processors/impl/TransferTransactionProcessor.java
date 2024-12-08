@@ -14,41 +14,47 @@ import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
-@Component
 @AllArgsConstructor
-public class WithdrawTransactionProcessor implements TransactionProcessor {
-
+@Component
+public class TransferTransactionProcessor implements TransactionProcessor {
     private final AccountRepository accountRepository;
+    private final TransactionMapper transactionMapper = TransactionMapper.INSTANCE;
+    private final AccountMapper accountMapper = AccountMapper.INSTANCE;
 
     @Override
     public void process(TransactionModel transaction) {
         String supposedOriginAccountId = transaction.origin();
+        String supposedRecipientAccountId = transaction.recipient();
         UUID originAccountId = null;
+        UUID recipientAccountId = null;
         try {
             originAccountId = UUID.fromString(supposedOriginAccountId);
+            recipientAccountId = UUID.fromString(supposedRecipientAccountId);
         } catch (Exception e) {
-            ExceptionThrower.throw406("Origin AccountId Not Valid");
+            ExceptionThrower.throw406("AccountId Not Valid");
         }
 
-        AccountMapper accountMapper = AccountMapper.INSTANCE;
+        AccountEntity originAccountEntity = accountRepository.findAccount(originAccountId);
+        AccountEntity recipientAccountEntity = accountRepository.findAccount(recipientAccountId);
 
-        AccountEntity account = accountRepository.findAccount(originAccountId);
-
-        if (account == null) {
-            ExceptionThrower.throw404("Account to withdraw not found");
+        if (originAccountEntity == null || recipientAccountEntity == null) {
+            ExceptionThrower.throw404("Recipient or origin account not found");
         }
 
-        AccountModel originAccount = accountMapper.entityToModel(account);
+        AccountModel originAccount = accountMapper.entityToModel(originAccountEntity);
+        AccountModel recipientAccount = accountMapper.entityToModel(recipientAccountEntity);
 
-        TransactionMapper transactionMapper = TransactionMapper.INSTANCE;
         transaction = transactionMapper.entityToModel(
                 accountRepository.generateTransactionEntity(transactionMapper.modelToEntity(transaction)));
 
         if (originAccount.getBalance() < transaction.amount()) {
-            ExceptionThrower.throw422("Not enough balance for this Withdraw");
+            ExceptionThrower.throw422("Not enough balance for this Transfer");
         }
-        originAccount.processTransaction(transaction, OperationType.SUBTRACT);
+
+        originAccount.processTransaction(transaction, OperationType.ADD);
+        recipientAccount.processTransaction(transaction, OperationType.ADD);
 
         accountRepository.save(accountMapper.modelToEntity(originAccount));
+        accountRepository.save(accountMapper.modelToEntity(recipientAccount));
     }
 }
