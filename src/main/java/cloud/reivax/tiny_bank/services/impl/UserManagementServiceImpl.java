@@ -1,9 +1,10 @@
-package cloud.reivax.tiny_bank.services;
+package cloud.reivax.tiny_bank.services.impl;
 
 import cloud.reivax.tiny_bank.repositories.UserRepository;
 import cloud.reivax.tiny_bank.repositories.entities.UserEntity;
-import cloud.reivax.tiny_bank.services.models.UserEntityMapper;
-import cloud.reivax.tiny_bank.services.models.UserModel;
+import cloud.reivax.tiny_bank.services.UserManagementService;
+import cloud.reivax.tiny_bank.services.models.users.UserModel;
+import cloud.reivax.tiny_bank.utils.mappers.UserMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -24,12 +25,12 @@ public class UserManagementServiceImpl implements UserManagementService {
     @Override
     public UserModel getUser(UUID userId) {
         UserEntity userEntity = userRepository.findById(userId);
-        return UserEntityMapper.INSTANCE.userEntityToModel(userEntity);
+        return UserMapper.INSTANCE.userEntityToModel(userEntity);
     }
 
     @Override
     public URI createUser(UserModel user) {
-        UserEntity userEntity = UserEntityMapper.INSTANCE.userModelToEntity(user);
+        UserEntity userEntity = UserMapper.INSTANCE.userModelToEntity(user);
         UUID userId = userRepository.save(userEntity);
 
         return URI.create(BASE_RESOURCE_PATH + userId);

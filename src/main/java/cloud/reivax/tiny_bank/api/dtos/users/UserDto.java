@@ -1,4 +1,4 @@
-package cloud.reivax.tiny_bank.api.dtos;
+package cloud.reivax.tiny_bank.api.dtos.users;
 
 import lombok.Builder;
 

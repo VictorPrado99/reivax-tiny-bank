@@ -1,4 +1,4 @@
-package cloud.reivax.tiny_bank.services.models;
+package cloud.reivax.tiny_bank.services.models.users;
 
 import lombok.Builder;
 

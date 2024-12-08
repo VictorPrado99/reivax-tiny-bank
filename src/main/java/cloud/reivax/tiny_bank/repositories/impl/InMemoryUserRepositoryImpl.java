@@ -1,12 +1,11 @@
-package cloud.reivax.tiny_bank.repositories;
+package cloud.reivax.tiny_bank.repositories.impl;
 
+import cloud.reivax.tiny_bank.repositories.UserRepository;
 import cloud.reivax.tiny_bank.repositories.entities.UserEntity;
+import cloud.reivax.tiny_bank.utils.ExceptionThrower;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.client.HttpClientErrorException;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.UUID;
 
@@ -19,19 +18,11 @@ public class InMemoryUserRepositoryImpl implements UserRepository {
 
     @Override
     public UserEntity findById(UUID userId) {
-        if (db.containsKey(userId)) {
-            return db.get(userId);
-        } else {
+        if (!db.containsKey(userId)) {
             //I choose to throw exception here, because I implemented the "storage", but usually that would probably be at Service Layer
-            HttpStatus notFound = HttpStatus.NOT_FOUND;
-            throw HttpClientErrorException
-                    .create("User not found",
-                            notFound,
-                            notFound.getReasonPhrase(),
-                            null,
-                            null,
-                            StandardCharsets.UTF_8);
+            ExceptionThrower.throw404("User not found");
         }
+        return db.get(userId);
     }
 
     @Override
@@ -69,9 +60,7 @@ public class InMemoryUserRepositoryImpl implements UserRepository {
     //but for this example, this strategy should be enough
     private Boolean transferBetweenDatabases(UUID userId) {
         if (!db.containsKey(userId)) {
-            HttpStatus notFound = HttpStatus.NOT_FOUND;
-            throw HttpClientErrorException
-                    .create("User doesn't exists", notFound, notFound.getReasonPhrase(), null, null, null);
+            ExceptionThrower.throw404("User doesn't exists");
         }
         disabledDb.put(userId, db.remove(userId));
 

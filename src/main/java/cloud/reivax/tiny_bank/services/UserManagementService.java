@@ -1,6 +1,6 @@
 package cloud.reivax.tiny_bank.services;
 
-import cloud.reivax.tiny_bank.services.models.UserModel;
+import cloud.reivax.tiny_bank.services.models.users.UserModel;
 
 import java.net.URI;
 import java.util.UUID;

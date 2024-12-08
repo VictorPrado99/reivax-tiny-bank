@@ -1,10 +1,11 @@
-package cloud.reivax.tiny_bank.api.controllers;
+package cloud.reivax.tiny_bank.api.controllers.users;
 
-import cloud.reivax.tiny_bank.api.dtos.CreateUserDto;
-import cloud.reivax.tiny_bank.api.dtos.UserDto;
-import cloud.reivax.tiny_bank.api.dtos.UserMapper;
+import cloud.reivax.tiny_bank.api.controllers.UsersController;
+import cloud.reivax.tiny_bank.api.dtos.users.CreateUserDto;
+import cloud.reivax.tiny_bank.api.dtos.users.UserDto;
 import cloud.reivax.tiny_bank.services.UserManagementService;
-import cloud.reivax.tiny_bank.services.models.UserModel;
+import cloud.reivax.tiny_bank.services.models.users.UserModel;
+import cloud.reivax.tiny_bank.utils.mappers.UserMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -19,7 +20,7 @@ import java.util.UUID;
 @Slf4j
 @AllArgsConstructor
 @RestController
-public class TinyBankControllerImpl implements TinyBankController {
+public class UsersControllerImpl implements UsersController {
 
     private final UserManagementService userManagementService;
 

@@ -1,7 +1,7 @@
 package cloud.reivax.tiny_bank.api.controllers;
 
-import cloud.reivax.tiny_bank.api.dtos.CreateUserDto;
-import cloud.reivax.tiny_bank.api.dtos.UserDto;
+import cloud.reivax.tiny_bank.api.dtos.users.CreateUserDto;
+import cloud.reivax.tiny_bank.api.dtos.users.UserDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/users")
-public interface TinyBankController {
+public interface UsersController {
 
     @Operation(summary = "Get specific user by userId")
     @ApiResponses(value = {
