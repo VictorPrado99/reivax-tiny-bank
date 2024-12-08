@@ -19,6 +19,10 @@ public class ExceptionThrower {
                 StandardCharsets.UTF_8);
     }
 
+    public void throwUuidNotComplain() {
+        throw406("Incorrect UUID");
+    }
+
     public void throw406(String msg) {
         HttpStatus notAcceptable = HttpStatus.NOT_ACCEPTABLE;
         throw HttpClientErrorException.create(msg,

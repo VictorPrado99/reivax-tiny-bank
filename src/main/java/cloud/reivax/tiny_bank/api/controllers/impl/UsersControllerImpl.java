@@ -6,6 +6,7 @@ import cloud.reivax.tiny_bank.api.dtos.users.UserDto;
 import cloud.reivax.tiny_bank.services.UserManagementService;
 import cloud.reivax.tiny_bank.services.models.users.UserModel;
 import cloud.reivax.tiny_bank.utils.ExceptionThrower;
+import cloud.reivax.tiny_bank.utils.UuidUtility;
 import cloud.reivax.tiny_bank.utils.mappers.UserMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +27,12 @@ public class UsersControllerImpl implements UsersController {
 
     @Override
     public ResponseEntity<UserDto> getUser(String userIdParam) {
-        UserModel user = userManagementService.getUser(parseUUIDString(userIdParam));
+        UUID userId = UuidUtility.parseUUIDString(userIdParam);
+        if (userId == null) {
+            ExceptionThrower.throwUuidNotComplain();
+        }
+
+        UserModel user = userManagementService.getUser(userId);
         UserDto userDto = UserMapper.INSTANCE.userModelToUserDto(user);
         return ResponseEntity.ok(userDto);
     }
@@ -43,18 +49,14 @@ public class UsersControllerImpl implements UsersController {
 
     @Override
     public ResponseEntity<Void> deactivateUser(String userIdParam) {
-        UUID userId = parseUUIDString(userIdParam);
-        userManagementService.disableUser(userId);
+        UUID userId = UuidUtility.parseUUIDString(userIdParam);
+        if (userId == null) {
+            ExceptionThrower.throwUuidNotComplain();
+        }
 
+        userManagementService.disableUser(userId);
         return ResponseEntity.ok().build();
     }
 
-    private UUID parseUUIDString(String userIdString) {
-        try {
-            return UUID.fromString(userIdString);
-        } catch (IllegalArgumentException illegalArgumentException) {
-            ExceptionThrower.throw406("Not acceptable UUID");
-        }
-        return null;
-    }
+
 }

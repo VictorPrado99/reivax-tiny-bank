@@ -6,6 +6,8 @@ import cloud.reivax.tiny_bank.api.dtos.accounts.CreateTransactionDto;
 import cloud.reivax.tiny_bank.services.AccountService;
 import cloud.reivax.tiny_bank.services.models.accounts.AccountModel;
 import cloud.reivax.tiny_bank.services.models.accounts.TransactionModel;
+import cloud.reivax.tiny_bank.utils.ExceptionThrower;
+import cloud.reivax.tiny_bank.utils.UuidUtility;
 import cloud.reivax.tiny_bank.utils.mappers.AccountMapper;
 import cloud.reivax.tiny_bank.utils.mappers.TransactionMapper;
 import lombok.AllArgsConstructor;
@@ -13,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @AllArgsConstructor
@@ -40,5 +43,17 @@ public class AccountsControllerImpl implements AccountsController {
         accountService.executeTransaction(transactionModel);
 
         return ResponseEntity.ok().build();
+    }
+
+    @Override
+    public ResponseEntity<AccountDto> retrieveAccountBalance(String accountId) {
+        UUID parsedAccountId = UuidUtility.parseUUIDString(accountId);
+        if (parsedAccountId == null) {
+            ExceptionThrower.throwUuidNotComplain();
+        }
+
+        AccountDto accountDto = AccountMapper.INSTANCE.modelToDto(accountService.retrieveAccount(parsedAccountId));
+
+        return ResponseEntity.ok(accountDto);
     }
 }

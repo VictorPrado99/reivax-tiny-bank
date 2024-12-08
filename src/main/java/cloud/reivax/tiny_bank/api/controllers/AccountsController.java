@@ -28,4 +28,13 @@ public interface AccountsController {
     })
     @PutMapping("/transactions")
     ResponseEntity<Void> transactionExchange(@RequestBody CreateTransactionDto createTransactionDto);
+
+    @Operation(summary = "Get account balance")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Balance retrieve"),
+            @ApiResponse(responseCode = "404", description = "Account not found"),
+            @ApiResponse(responseCode = "406", description = "AccountId is not an UUID")
+    })
+    @GetMapping("/balances/{accountId}")
+    ResponseEntity<AccountDto> retrieveAccountBalance(@PathVariable String accountId);
 }
