@@ -37,9 +37,12 @@ dependencies {
 //	testImplementation("org.springframework.security:spring-security-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
+//	Logging
+	implementation("org.slf4j:slf4j-api:2.0.16")
+//	Validation Annotations
+	implementation("org.springframework.boot:spring-boot-starter-validation")
 //	Spring Docs Dependencies
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0")
-
 //	Mapping dependencies
 	implementation("org.mapstruct:mapstruct:1.6.3")
 	annotationProcessor("org.mapstruct:mapstruct-processor:1.6.3")

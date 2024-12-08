@@ -16,9 +16,4 @@ public class DatabasesConfiguration {
         return new ConcurrentHashMap<>();
     }
 
-    @Bean
-    public Map<UUID, UserEntity> disabledDb() {
-        return new ConcurrentHashMap<>();
-    }
-
 }

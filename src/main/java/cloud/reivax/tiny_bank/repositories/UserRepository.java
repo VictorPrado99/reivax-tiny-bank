@@ -11,7 +11,9 @@ public interface UserRepository {
     // we can easily change the implementation without needing to change the service layer
     UserEntity findById(UUID userId);
 
-    UUID save(UserEntity userEntity);
+    UserEntity save(UserEntity userEntity);
 
-    Boolean disableById(UUID userId);
+    void disableById(UUID userId);
+
+    void enableById(UUID userId);
 }

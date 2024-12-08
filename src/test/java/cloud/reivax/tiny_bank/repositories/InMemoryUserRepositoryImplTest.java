@@ -1,6 +1,7 @@
 package cloud.reivax.tiny_bank.repositories;
 
 import cloud.reivax.tiny_bank.repositories.entities.UserEntity;
+import cloud.reivax.tiny_bank.repositories.impl.InMemoryUserRepositoryImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,7 +39,8 @@ class InMemoryUserRepositoryImplTest {
                 .build();
 
         //When
-        UUID userId = inMemoryUserRepository.save(userEntity);
+        UserEntity savedUser = inMemoryUserRepository.save(userEntity);
+        UUID userId = savedUser.userId();
         userEntity = userEntity.toBuilder()
                 .userId(userId)
                 .build();

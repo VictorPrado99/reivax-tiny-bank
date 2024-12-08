@@ -1,27 +1,28 @@
-package cloud.reivax.tiny_bank.api.controllers;
+package cloud.reivax.tiny_bank.api.controllers.impl;
 
-import cloud.reivax.tiny_bank.api.dtos.CreateUserDto;
-import cloud.reivax.tiny_bank.api.dtos.UserDto;
-import cloud.reivax.tiny_bank.api.dtos.UserMapper;
+import cloud.reivax.tiny_bank.api.controllers.UsersController;
+import cloud.reivax.tiny_bank.api.dtos.users.CreateUserDto;
+import cloud.reivax.tiny_bank.api.dtos.users.UserDto;
 import cloud.reivax.tiny_bank.services.UserManagementService;
-import cloud.reivax.tiny_bank.services.models.UserModel;
+import cloud.reivax.tiny_bank.services.models.users.UserModel;
+import cloud.reivax.tiny_bank.utils.ExceptionThrower;
+import cloud.reivax.tiny_bank.utils.mappers.UserMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.HttpClientErrorException;
 
 import java.net.URI;
-import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 @Slf4j
 @AllArgsConstructor
 @RestController
-public class TinyBankControllerImpl implements TinyBankController {
+public class UsersControllerImpl implements UsersController {
 
     private final UserManagementService userManagementService;
+    private static final String BASE_RESOURCE_PATH = "/users/";
+
 
     @Override
     public ResponseEntity<UserDto> getUser(String userIdParam) {
@@ -31,11 +32,12 @@ public class TinyBankControllerImpl implements TinyBankController {
     }
 
     @Override
-    public ResponseEntity<Void> createUser(CreateUserDto createUserDto) {
+    public ResponseEntity<UserDto> createUser(CreateUserDto createUserDto) {
         UserModel userModel = UserMapper.INSTANCE.createUserDtoToModel(createUserDto);
-        URI resourcePath = userManagementService.createUser(userModel);
+        UserDto userDto = userManagementService.createUser(userModel);
 
-        return ResponseEntity.created(resourcePath).build();
+        return ResponseEntity.created(URI.create(BASE_RESOURCE_PATH + userDto.userId()))
+                .body(userDto);
 
     }
 
@@ -51,12 +53,8 @@ public class TinyBankControllerImpl implements TinyBankController {
         try {
             return UUID.fromString(userIdString);
         } catch (IllegalArgumentException illegalArgumentException) {
-            throw HttpClientErrorException.NotAcceptable.create(
-                    HttpStatus.NOT_ACCEPTABLE,
-                    HttpStatus.NOT_ACCEPTABLE.getReasonPhrase(),
-                    null,
-                    null,
-                    StandardCharsets.UTF_8);
+            ExceptionThrower.throw406("Not acceptable UUID");
         }
+        return null;
     }
 }
