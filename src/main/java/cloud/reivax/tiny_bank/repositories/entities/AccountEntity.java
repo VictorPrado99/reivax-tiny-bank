@@ -11,7 +11,6 @@ public record AccountEntity(
         UUID userId,
         // I am assuming single currency.
         double balance,
-
         List<TransactionEntity> transactionHistory
 ) {
 }
