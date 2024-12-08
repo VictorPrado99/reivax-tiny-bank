@@ -21,6 +21,7 @@ public class InMemoryUserRepositoryImpl implements UserRepository {
         if (db.containsKey(userId)) {
             return db.get(userId);
         } else {
+            //I choose to throw exception here, because I implemented the "storage", but usually that would probably be at Service Layer
             HttpStatus notFound = HttpStatus.NOT_FOUND;
             throw HttpClientErrorException
                     .create("User not found",

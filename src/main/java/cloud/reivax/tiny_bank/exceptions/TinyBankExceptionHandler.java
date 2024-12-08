@@ -11,6 +11,8 @@ public class TinyBankExceptionHandler {
 
     @ExceptionHandler(exception = {HttpStatusCodeException.class})
     public ErrorResponse handleExceptions(HttpStatusCodeException exception) {
+        //A simple exception handler, so I can throw exceptions in the application, and it will generate the ErrorResponse here,
+        // but it is very simple, and not very robust
         return ErrorResponse.create(exception, exception.getStatusCode(), exception.getMessage());
     }
 }
