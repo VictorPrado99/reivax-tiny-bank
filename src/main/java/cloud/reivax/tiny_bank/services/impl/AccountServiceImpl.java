@@ -8,6 +8,7 @@ import cloud.reivax.tiny_bank.services.models.accounts.TransactionModel;
 import cloud.reivax.tiny_bank.services.processors.TransactionProcessor;
 import cloud.reivax.tiny_bank.utils.ExceptionThrower;
 import cloud.reivax.tiny_bank.utils.mappers.AccountMapper;
+import cloud.reivax.tiny_bank.utils.mappers.TransactionMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -75,5 +76,14 @@ public class AccountServiceImpl implements AccountService {
         }
 
         return AccountMapper.INSTANCE.entityToModel(accountEntity);
+    }
+
+    @Override
+    public List<TransactionModel> retrieveTransactionHistory(UUID accountId) {
+        AccountEntity accountEntity = accountRepository.findAccount(accountId);
+
+        return accountEntity.transactionHistory().stream()
+                .map(TransactionMapper.INSTANCE::entityToModel)
+                .toList();
     }
 }

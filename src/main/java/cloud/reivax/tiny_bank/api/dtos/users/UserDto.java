@@ -13,8 +13,6 @@ public record UserDto(
         UUID userId,
         @Schema(defaultValue = "Reivax")
         String userName,
-
-        @Schema(implementation = Map.class)
         Map<UUID, AccountDto> accounts
 ) {
 }
