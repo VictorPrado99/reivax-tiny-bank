@@ -22,7 +22,7 @@ public class AccountsControllerImpl implements AccountsController {
 
     @Override
     public ResponseEntity<List<AccountDto>> getAccounts(String accountsIds) {
-        String[] accountIdsArray = accountsIds.split(",");
+        String[] accountIdsArray = accountsIds != null ? accountsIds.split(",") : null;
 
         List<AccountModel> accountModels = accountService.getAccounts(accountIdsArray);
 

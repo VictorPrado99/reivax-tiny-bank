@@ -12,7 +12,7 @@ import java.util.UUID;
 @Data
 public class AccountModel {
     private final UUID accountId;
-    private final UserModel userId;
+    private final UserModel user;
     @Setter(AccessLevel.NONE)
     private Double balance;
 

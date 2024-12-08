@@ -3,6 +3,7 @@ package cloud.reivax.tiny_bank.repositories.impl;
 import cloud.reivax.tiny_bank.repositories.UserRepository;
 import cloud.reivax.tiny_bank.repositories.entities.UserEntity;
 import cloud.reivax.tiny_bank.utils.ExceptionThrower;
+import cloud.reivax.tiny_bank.utils.InMemoryDbUtility;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -14,7 +15,7 @@ import java.util.UUID;
 public class InMemoryUserRepositoryImpl implements UserRepository {
 
     private final Map<UUID, UserEntity> db;
-    private final Map<UUID, UserEntity> disabledDb;
+    private final Map<UUID, UserEntity> disabledUserDb;
 
     @Override
     public UserEntity findById(UUID userId) {
@@ -26,27 +27,17 @@ public class InMemoryUserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public UUID save(UserEntity userEntity) {
+    public UserEntity save(UserEntity userEntity) {
         // I am not worrying about updating user, but theoretically this same method could be used for it,
         // but, we may want further logic to keep historical data or something like that.
-        UUID userId = getOrGenerateUserId(userEntity);
-        db.put(userId, userEntity.toBuilder()
+        UUID userId = InMemoryDbUtility.getOrGenerateKey(userEntity.userId(), db.keySet());
+        UserEntity savedEntity = userEntity.toBuilder()
                 .userId(userId)
-                .build());
-        return userId;
-    }
+                .build();
 
-    private UUID getOrGenerateUserId(UserEntity userEntity) {
-        return userEntity.userId() != null ? userEntity.userId() : generateUniqueUserId();
-    }
+        db.put(userId, savedEntity);
 
-    private UUID generateUniqueUserId() {
-        UUID userId;
-        do {
-            userId = UUID.randomUUID();
-        } while (db.containsKey(userId));
-
-        return userId;
+        return savedEntity;
     }
 
     @Override
@@ -62,8 +53,8 @@ public class InMemoryUserRepositoryImpl implements UserRepository {
         if (!db.containsKey(userId)) {
             ExceptionThrower.throw404("User doesn't exists");
         }
-        disabledDb.put(userId, db.remove(userId));
+        disabledUserDb.put(userId, db.remove(userId));
 
-        return disabledDb.containsKey(userId) && !db.containsKey(userId);
+        return disabledUserDb.containsKey(userId) && !db.containsKey(userId);
     }
 }

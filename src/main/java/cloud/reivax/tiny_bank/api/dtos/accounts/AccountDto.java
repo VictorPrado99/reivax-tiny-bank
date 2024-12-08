@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public record AccountDto(
         UUID accountId,
-        UserDto userId,
+        UserDto user,
         List<TransactionDto> transactionHistory
 ) {
 }

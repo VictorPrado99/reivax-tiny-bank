@@ -14,7 +14,8 @@ import java.util.List;
 public interface AccountsController {
 
     @Operation(summary = "Get a list of accounts by a comma separated list of Account Ids, " +
-            "if not existent or not following UUID rules, the value will be ignored")
+            "if not existent or not following UUID rules, the value will be ignored. If parameter is not sent, " +
+            "it will retrieve all accounts.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Accounts successfully recovered")
     })

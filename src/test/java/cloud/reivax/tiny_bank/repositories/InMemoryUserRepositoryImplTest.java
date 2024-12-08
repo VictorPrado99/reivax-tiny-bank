@@ -39,7 +39,8 @@ class InMemoryUserRepositoryImplTest {
                 .build();
 
         //When
-        UUID userId = inMemoryUserRepository.save(userEntity);
+        UserEntity savedUser = inMemoryUserRepository.save(userEntity);
+        UUID userId = savedUser.userId();
         userEntity = userEntity.toBuilder()
                 .userId(userId)
                 .build();

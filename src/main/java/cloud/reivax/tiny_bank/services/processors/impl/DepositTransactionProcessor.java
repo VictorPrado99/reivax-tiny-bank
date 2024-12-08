@@ -30,7 +30,7 @@ public class DepositTransactionProcessor implements TransactionProcessor {
 
         AccountMapper mapperInstance = AccountMapper.INSTANCE;
 
-        AccountModel recipientAccount = mapperInstance.entityToModel(accountRepository.getAccount(recipientAccountId));
+        AccountModel recipientAccount = mapperInstance.entityToModel(accountRepository.findAccount(recipientAccountId));
 
         recipientAccount.processTransaction(transaction, OperationType.ADD);
 

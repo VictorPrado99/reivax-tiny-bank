@@ -1,6 +1,7 @@
 package cloud.reivax.tiny_bank.api.controllers.users;
 
 import cloud.reivax.tiny_bank.api.controllers.UsersController;
+import cloud.reivax.tiny_bank.api.dtos.accounts.AccountDto;
 import cloud.reivax.tiny_bank.api.dtos.users.CreateUserDto;
 import cloud.reivax.tiny_bank.api.dtos.users.UserDto;
 import cloud.reivax.tiny_bank.services.UserManagementService;
@@ -23,6 +24,8 @@ import java.util.UUID;
 public class UsersControllerImpl implements UsersController {
 
     private final UserManagementService userManagementService;
+    private static final String BASE_RESOURCE_PATH = "/users/";
+
 
     @Override
     public ResponseEntity<UserDto> getUser(String userIdParam) {
@@ -32,11 +35,12 @@ public class UsersControllerImpl implements UsersController {
     }
 
     @Override
-    public ResponseEntity<Void> createUser(CreateUserDto createUserDto) {
+    public ResponseEntity<AccountDto> createUser(CreateUserDto createUserDto) {
         UserModel userModel = UserMapper.INSTANCE.createUserDtoToModel(createUserDto);
-        URI resourcePath = userManagementService.createUser(userModel);
+        AccountDto accountDto = userManagementService.createUser(userModel);
 
-        return ResponseEntity.created(resourcePath).build();
+        return ResponseEntity.created(URI.create(BASE_RESOURCE_PATH + accountDto.user().userId()))
+                .body(accountDto);
 
     }
 

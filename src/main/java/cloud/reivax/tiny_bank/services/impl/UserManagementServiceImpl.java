@@ -1,26 +1,27 @@
 package cloud.reivax.tiny_bank.services.impl;
 
+import cloud.reivax.tiny_bank.api.dtos.accounts.AccountDto;
 import cloud.reivax.tiny_bank.repositories.UserRepository;
 import cloud.reivax.tiny_bank.repositories.entities.UserEntity;
+import cloud.reivax.tiny_bank.services.AccountService;
 import cloud.reivax.tiny_bank.services.UserManagementService;
+import cloud.reivax.tiny_bank.services.models.accounts.AccountModel;
 import cloud.reivax.tiny_bank.services.models.users.UserModel;
+import cloud.reivax.tiny_bank.utils.mappers.AccountMapper;
 import cloud.reivax.tiny_bank.utils.mappers.UserMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpServerErrorException;
 
-import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 @Service
 @AllArgsConstructor
 public class UserManagementServiceImpl implements UserManagementService {
-
-    private static final String BASE_RESOURCE_PATH = "/users/";
-
     private final UserRepository userRepository;
+    private final AccountService accountService;
 
     @Override
     public UserModel getUser(UUID userId) {
@@ -29,11 +30,13 @@ public class UserManagementServiceImpl implements UserManagementService {
     }
 
     @Override
-    public URI createUser(UserModel user) {
-        UserEntity userEntity = UserMapper.INSTANCE.userModelToEntity(user);
-        UUID userId = userRepository.save(userEntity);
+    public AccountDto createUser(UserModel user) {
+        UserMapper userMapper = UserMapper.INSTANCE;
+        UserEntity userEntity = userRepository.save(userMapper.userModelToEntity(user));
 
-        return URI.create(BASE_RESOURCE_PATH + userId);
+        AccountModel accountModel = accountService.createAccount(userMapper.userEntityToModel(userEntity));
+
+        return AccountMapper.INSTANCE.modelToDto(accountModel);
     }
 
     @Override
