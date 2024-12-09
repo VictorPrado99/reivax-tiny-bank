@@ -25,7 +25,8 @@ public interface AccountsController {
 
     @Operation(summary = "Create a transaction (e.g. deposit, withdraw, transfer)")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Transaction completed")
+            @ApiResponse(responseCode = "200", description = "Transaction completed"),
+            @ApiResponse(responseCode = "404", description = "Account not found")
     })
     @PutMapping("/transactions")
     ResponseEntity<Void> transactionExchange(@RequestBody CreateTransactionDto createTransactionDto);

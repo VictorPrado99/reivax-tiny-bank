@@ -31,7 +31,7 @@ public class AccountServiceImpl implements AccountService {
 
         return Arrays.stream(accountIdsArray)
                 .filter(Objects::nonNull)
-                .filter(String::isBlank)
+                .filter(id -> !id.isBlank())
                 .map(this::getUuidOrNull)
                 .filter(Objects::nonNull)
                 .map(accountRepository::findAccount)
@@ -81,6 +81,10 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public List<TransactionModel> retrieveTransactionHistory(UUID accountId) {
         AccountEntity accountEntity = accountRepository.findAccount(accountId);
+
+        if (accountEntity == null) {
+            ExceptionThrower.throw404("Account not found");
+        }
 
         return accountEntity.transactionHistory().stream()
                 .map(TransactionMapper.INSTANCE::entityToModel)
