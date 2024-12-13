@@ -75,7 +75,7 @@ class UsersControllerImplTest {
 
     @Test
     void testTryDisableNotValidUser() {
-        validateExceptionThrown(usersController::deactivateUser, HttpStatus.CONFLICT, "XPTO");
+        validateExceptionThrown(usersController::deactivateUser, HttpStatus.NOT_ACCEPTABLE, "XPTO");
     }
 
     @Test

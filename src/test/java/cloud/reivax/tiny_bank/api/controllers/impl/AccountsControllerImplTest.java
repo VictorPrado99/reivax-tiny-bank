@@ -137,7 +137,10 @@ class AccountsControllerImplTest {
         UserEntity userInDbEntity = DbHelperTester.createUserInDb(userId, accountId, userName, db);
         UUID origin = UUID.randomUUID();
 
-        CreateTransactionDto depositTransaction = new CreateTransactionDto("DEPOSIT", origin.toString(), accountId.toString(), 143.43D);
+        double balanceBeforeTransaction = userInDbEntity.getAccounts().get(accountId).balance();
+
+        double transactionAmount = 143.43D;
+        CreateTransactionDto depositTransaction = new CreateTransactionDto("DEPOSIT", origin, accountId, transactionAmount);
 
         //When
         ResponseEntity<Void> responseEntity = accountsController.transactionExchange(depositTransaction);
@@ -146,6 +149,7 @@ class AccountsControllerImplTest {
         //Then
         List<TransactionEntity> transactionEntities = userInDbEntity.getAccounts().get(accountId).transactionHistory();
 
+        assertEquals(balanceBeforeTransaction + transactionAmount, userInDbEntity.getAccounts().get(accountId).balance());
         assertEquals(HttpStatus.OK, statusCode);
         assertEquals(2, transactionEntities.size()); //1 because we had by default, +1 with the new transaction
     }
@@ -159,7 +163,10 @@ class AccountsControllerImplTest {
         UserEntity userInDbEntity = DbHelperTester.createUserInDb(userId, accountId, userName, db);
         UUID recipient = UUID.randomUUID();
 
-        CreateTransactionDto withdrawTransaction = new CreateTransactionDto("WITHDRAW", accountId.toString(), recipient.toString(), 1D);
+        double balanceBeforeTransaction = userInDbEntity.getAccounts().get(accountId).balance();
+        double transactionAmount = 1D;
+
+        CreateTransactionDto withdrawTransaction = new CreateTransactionDto("WITHDRAW", accountId, recipient, transactionAmount);
 
         //When
         ResponseEntity<Void> responseEntity = accountsController.transactionExchange(withdrawTransaction);
@@ -168,6 +175,7 @@ class AccountsControllerImplTest {
         //Then
         List<TransactionEntity> transactionEntities = userInDbEntity.getAccounts().get(accountId).transactionHistory();
 
+        assertEquals(balanceBeforeTransaction - transactionAmount, userInDbEntity.getAccounts().get(accountId).balance());
         assertEquals(HttpStatus.OK, statusCode);
         assertEquals(2, transactionEntities.size()); //1 because we had by default, +1 with the new transaction
     }
@@ -179,16 +187,19 @@ class AccountsControllerImplTest {
         UUID accountId1 = UUID.randomUUID();
         String userName1 = "HappyPerson";
         UserEntity userInDbEntity1 = DbHelperTester.createUserInDb(userId1, accountId1, userName1, db);
+        double user1BalanceBefore = userInDbEntity1.getAccounts().get(accountId1).balance();
 
         UUID userId2 = UUID.randomUUID();
         UUID accountId2 = UUID.randomUUID();
         String userName2 = "HappyPerson";
         UserEntity userInDbEntity2 = DbHelperTester.createUserInDb(userId2, accountId2, userName2, db);
+        double user2BalanceBefore = userInDbEntity2.getAccounts().get(accountId2).balance();
 
+        double transferAmount = 1.43D;
         CreateTransactionDto depositTransaction = new CreateTransactionDto("TRANSFER",
-                accountId1.toString(),
-                accountId2.toString(),
-                1.43D
+                accountId1,
+                accountId2,
+                transferAmount
         );
 
         //When
@@ -198,6 +209,8 @@ class AccountsControllerImplTest {
         //Then
         List<TransactionEntity> transactionEntities = userInDbEntity2.getAccounts().get(accountId2).transactionHistory();
 
+        assertEquals(user1BalanceBefore - transferAmount, userInDbEntity1.getAccounts().get(accountId1).balance());
+        assertEquals(user2BalanceBefore + transferAmount, userInDbEntity2.getAccounts().get(accountId2).balance());
         assertEquals(HttpStatus.OK, statusCode);
         assertEquals(2, transactionEntities.size()); //1 because we had by default, +1 with the new transaction
     }

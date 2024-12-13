@@ -51,7 +51,7 @@ public class TransferTransactionProcessor implements TransactionProcessor {
             ExceptionThrower.throw422("Not enough balance for this Transfer");
         }
 
-        originAccount.processTransaction(transaction, OperationType.ADD);
+        originAccount.processTransaction(transaction, OperationType.SUBTRACT);
         recipientAccount.processTransaction(transaction, OperationType.ADD);
 
         accountRepository.save(accountMapper.modelToEntity(originAccount));
